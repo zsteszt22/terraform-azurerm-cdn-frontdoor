@@ -48,11 +48,12 @@ resource "azurerm_cdn_frontdoor_rule" "cdn_frontdoor_rule" {
       content {
         cache_duration                = action.value.cache_duration
         cdn_frontdoor_origin_group_id = action.value.cdn_frontdoor_origin_group_id
-        forwarding_protocol           = action.value.forwarding_protocol
         query_string_caching_behavior = action.value.query_string_caching_behavior
         query_string_parameters       = action.value.query_string_parameters
         compression_enabled           = action.value.compression_enabled
         cache_behavior                = action.value.cache_behavior
+        # Set the forwarding_protocol only if cdn_frontdoor_origin_group_id has a value
+        forwarding_protocol = length(action.value.cdn_frontdoor_origin_group_id) > 0 ? action.value.forwarding_protocol : null
       }
     }
     dynamic "request_header_action" {
